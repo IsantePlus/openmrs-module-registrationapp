@@ -21,7 +21,7 @@
     <p>
         ${ui.message("registrationapp.biometrics.m2sys.register.question")}
     </p>
-    <button class="button app big" onClick="capture('${ deviceName }','${ templateFormat }','${ engineName }','${ useTemplate }');
+    <button class="button app big" onClick="capture();
     return false;">
         <i class="icon-hand-up"></i>
         ${ui.message("registrationapp.biometrics.m2sys.register.button.label")}
