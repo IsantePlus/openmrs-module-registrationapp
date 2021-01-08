@@ -1,8 +1,5 @@
 /*API Call*/
-function capture() {
-    var deviceName = 'DigitalPersona';
-    var templateFormat = 'ISO';
-    var engineName = 'FPFF02';
+function capture(deviceName,templateFormat,engineName) {
     var apiPath = 'http://localhost:15896/api/CloudScanr/FPCapture';
 
     CallFPBioMetricCapture(SuccessFunc, ErrorFunc, apiPath, deviceName, templateFormat, engineName);
