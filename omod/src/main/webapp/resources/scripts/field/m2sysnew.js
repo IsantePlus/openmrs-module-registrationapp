@@ -1,8 +1,19 @@
 /*API Call*/
-function capture(deviceName,templateFormat,engineName) {
+function capture(deviceName, templateFormat, engineName, useTemplate) {
     var apiPath = 'http://localhost:15896/api/CloudScanr/FPCapture';
+    if (useTemplate) {
+        jq.getJSON('/' + OPENMRS_CONTEXT_PATH + '/registrationapp/field/fingerprintM2sys/loadTemplateTemplate.action')
+            .success(function (response) {
+                console.log(response.testTemplate);
+                processTemplate(response.testTemplate);
 
-    CallFPBioMetricCapture(SuccessFunc, ErrorFunc, apiPath, deviceName, templateFormat, engineName);
+            })
+            .error(function (xhr, status, err) {
+                alert('AJAX error ' + err);
+            });
+    } else {
+        CallFPBioMetricCapture(SuccessFunc, ErrorFunc, apiPath, deviceName, templateFormat, engineName);
+    }
 }
 
 function CallFPBioMetricCapture(SuccessFunc, ErrorFunc, apiPath, deviceName, templateFormat, engineName) {
@@ -43,6 +54,42 @@ function CallFPBioMetricCapture(SuccessFunc, ErrorFunc, apiPath, deviceName, tem
     xmlhttp.onerror = function () {
         ErrorFunc(xmlhttp.statusText);
     }
+}
+
+function processTemplate(result) {
+
+    document.getElementById('biometricXml').value = result;
+    $('#fingerprintStatus').text("Template Loaded Successfully");
+
+    var patient_id;
+    var searchFinger;
+    var element;
+
+    element = document.getElementById('patient_id');
+    if (element != null) {
+        patient_id = element.value;
+    } else {
+        patient_id = '';
+    }
+
+
+    element = document.getElementById('searchFinger');
+    console.log(element);
+    if (element != null) {
+        searchFinger = element.value;
+    } else {
+        searchFinger = '';
+    }
+
+
+    if (patient_id != '') {
+        saveFinger();
+    }
+
+    if (searchFinger == '1') {
+        searchPatient();
+    }
+
 }
 
 function SuccessFunc(result, engineName) {
