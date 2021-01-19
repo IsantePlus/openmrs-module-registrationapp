@@ -60,7 +60,7 @@ ${ ui.includeFragment("uicommons", "validationMessages")}
     font-size: 15px;
     display: inline-block;
 }
-.matchingPatientContainer .container .location {
+.matchingPatientContainer .container .location .phoneNumber .mothersName {
     font-size: 15px;
     display: inline-block;
 }
