@@ -150,6 +150,8 @@ ${ ui.includeFragment("uicommons", "validationMessages")}
                 <span class="idName idNameTemplate"></span><span class="idValue idValueTemplate"></span>
             </div>
             <div class="location"></div>
+            <div class="mothersName"></div>
+            <div class="phoneNumber"></div>
         </div>
         <button class="local_button" style="float:right; margin:10px; padding: 2px 8px" onclick="location.href='/openmrs-standalone/coreapps/clinicianfacing/patient.page?patientId=7'">
             ${ui.message("registrationapp.open")}
