@@ -23,14 +23,6 @@
 
 </script>
 
-<% if (includeFragments) {
-    includeFragments.each { %>
-        ${ ui.includeFragment(it.extensionParams.provider, it.extensionParams.fragment) }
-<%  }
-} %>
-
 ${ ui.includeFragment("coreapps", "patientHeader", [ patient: patient.patient, activeVisit: null, appContextModel: null ]) }
-
-<hl />
 
 <div id="ccdDisplay">${ ccdHtml }</div>
