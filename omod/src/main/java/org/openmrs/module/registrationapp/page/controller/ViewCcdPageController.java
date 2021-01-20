@@ -49,6 +49,7 @@ public class ViewCcdPageController extends AbstractRegistrationAppPageController
         }
 
         patientDomainWrapper.setPatient(patient);
+
         model.addAttribute("patient", patientDomainWrapper);
         model.addAttribute("appId", app !=null ? app.getId() : "referenceapplication.registrationapp.registerPatient");
         model.addAttribute("search", search);
