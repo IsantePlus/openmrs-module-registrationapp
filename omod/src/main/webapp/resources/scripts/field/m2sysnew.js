@@ -1,7 +1,7 @@
 /*API Call*/
 function capture(deviceName, templateFormat, engineName, useTemplate) {
     var apiPath = 'http://localhost:15896/api/CloudScanr/FPCapture';
-    if (useTemplate) {
+    if (useTemplate == true) {
         jq.getJSON('/' + OPENMRS_CONTEXT_PATH + '/registrationapp/field/fingerprintM2sys/loadTemplateTemplate.action')
             .success(function (response) {
                 processTemplate(response.testTemplate);
