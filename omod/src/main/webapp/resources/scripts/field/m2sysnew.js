@@ -1,12 +1,30 @@
 /*API Call*/
-function capture(deviceName, templateFormat, engineName, useTemplate) {
+function capture(deviceName, templateFormat, engineName, useTemplate,sourceButton) {
     var apiPath = 'http://localhost:15896/api/CloudScanr/FPCapture';
-    toggleFingerprintButtonDisplay(jq('#captureButton'));
+    toggleFingerprintButtonDisplay(sourceButton);
     if (useTemplate === "yes") {
         jq.getJSON('/' + OPENMRS_CONTEXT_PATH + '/registrationapp/field/fingerprintM2sys/loadTemplateTemplate.action')
             .success(function (response) {
                 processTemplate(response.testTemplate);
 
+            })
+            .error(function (xhr, status, err) {
+                console.log("Error Processing");
+                alert('AJAX error ' + err);
+            });
+    } else {
+        console.log("Using the scanner");
+        CallFPBioMetricCapture(SuccessFunc, ErrorFunc, apiPath, deviceName, templateFormat, engineName);
+    }
+}
+
+function biometricSearch(deviceName, templateFormat, engineName, useTemplate,sourceButton) {
+    var apiPath = 'http://localhost:15896/api/CloudScanr/FPCapture';
+    toggleFingerprintButtonDisplay(sourceButton);
+    if (useTemplate === "yes") {
+        jq.getJSON('/' + OPENMRS_CONTEXT_PATH + '/registrationapp/field/fingerprintM2sys/loadTemplateTemplate.action')
+            .success(function (response) {
+                searchPatientByBiometricXml(response.testTemplate,sourceButton);
             })
             .error(function (xhr, status, err) {
                 alert('AJAX error ' + err);
@@ -188,6 +206,40 @@ function searchPatient() {
         .error(function (data) {
             alert(errorMessage);
             $('#fingerprintError').text(errorMessage);
+        });
+}
+
+function mpiImportingDialog(data) {
+    var emrDialog = emr.setupConfirmationDialog({
+        selector: '#patient-biometric-search-dialog',
+        actions: {
+            confirm: function () {
+                emrDialog.close();
+                redirectToPatient(data['patientUuid']);
+            },
+            cancel: function () {
+            }
+        }
+    });
+    emrDialog.show();
+}
+
+function searchPatientByBiometricXml(biometricXml,sourceButton) {
+    jq.getJSON('/' + OPENMRS_CONTEXT_PATH + '/registrationapp/search/M2SysSearch/search.action', {biometricXml: biometricXml})
+        .success(function (data) {
+            if (data['success'] === true) {
+                if (data['status'] === 'ALREADY_REGISTERED' && data['patientUuid']) {
+                    mpiImportingDialog(data);
+                } else {
+                    toggleFingerprintButtonDisplay(jq(sourceButton));
+                    alert("No registered patient with given biometric data")
+                }
+            } else {
+                console.log(data['message']);
+            }
+        })
+        .error(function (data) {
+            alert("Error while processing fingerprint details "+data['message']);
         });
 }
 
