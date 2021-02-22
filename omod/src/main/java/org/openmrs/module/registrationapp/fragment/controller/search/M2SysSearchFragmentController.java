@@ -63,7 +63,7 @@ public class M2SysSearchFragmentController {
 
     public void controller(FragmentModel model) {
         model.addAttribute("test", "testval");
-        RegistrationAppUiUtils.fetchBiometricCosts(model, adminService);
+        RegistrationAppUiUtils.fetchBiometricConstants(model, adminService);
     }
 
     public List<SimpleObject> getPatients(@SpringBean("registrationCoreService") RegistrationCoreService registrationCoreService,

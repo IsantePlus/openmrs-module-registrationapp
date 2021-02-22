@@ -78,7 +78,7 @@ public class FingerprintM2sysFragmentController {
 
    
     public void controller(FragmentModel model) {
-        RegistrationAppUiUtils.fetchBiometricCosts(model, adminService);
+        RegistrationAppUiUtils.fetchBiometricConstants(model, adminService);
     }
 
     public SimpleObject enroll(@SpringBean("messageSourceService") MessageSourceService messageSourceService,

@@ -39,7 +39,7 @@ public class RegistrationAppUiUtils {
 	public static final String DEFAULT_LONGITUDE_REGEX = "[+-]?((((1?[0-7]?|[0-9]?)[0-9])(\\.\\d+)?)|180(\\.0+)?)";
 
 
-	public static void fetchBiometricCosts(FragmentModel model, AdministrationService adminService) {
+	public static void fetchBiometricConstants(FragmentModel model, AdministrationService adminService) {
 		String constTestTemplate = M2SysBiometricsConstants.CONST_TEST_TEMPLATE;
 		String testTemplate = adminService.getGlobalProperty(constTestTemplate);
 		if(org.apache.commons.lang3.StringUtils.isNotBlank(testTemplate)){

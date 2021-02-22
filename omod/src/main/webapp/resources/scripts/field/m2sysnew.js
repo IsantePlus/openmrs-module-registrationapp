@@ -27,6 +27,7 @@ function biometricSearch(deviceName, templateFormat, engineName, useTemplate,sou
                 searchPatientByBiometricXml(response.testTemplate,sourceButton);
             })
             .error(function (xhr, status, err) {
+                toggleFingerprintButtonDisplay(sourceButton);
                 alert('AJAX error ' + err);
             });
     } else {
@@ -209,7 +210,7 @@ function searchPatient() {
         });
 }
 
-function mpiImportingDialog(data) {
+function mpiImportingDialog(data,sourceButton) {
     var emrDialog = emr.setupConfirmationDialog({
         selector: '#patient-biometric-search-dialog',
         actions: {
@@ -218,6 +219,7 @@ function mpiImportingDialog(data) {
                 redirectToPatient(data['patientUuid']);
             },
             cancel: function () {
+                toggleFingerprintButtonDisplay(sourceButton);
             }
         }
     });
@@ -229,9 +231,9 @@ function searchPatientByBiometricXml(biometricXml,sourceButton) {
         .success(function (data) {
             if (data['success'] === true) {
                 if (data['status'] === 'ALREADY_REGISTERED' && data['patientUuid']) {
-                    mpiImportingDialog(data);
+                    mpiImportingDialog(data,sourceButton);
                 } else {
-                    toggleFingerprintButtonDisplay(jq(sourceButton));
+                    toggleFingerprintButtonDisplay(sourceButton);
                     alert("No registered patient with given biometric data")
                 }
             } else {
