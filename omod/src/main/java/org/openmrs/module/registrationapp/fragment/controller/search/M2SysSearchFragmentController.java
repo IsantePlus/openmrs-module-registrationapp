@@ -109,7 +109,7 @@ public class M2SysSearchFragmentController {
 
                 if (patient != null) {
                     response.put("patientName", patient.getPersonName().getFullName());
-                    response.put("patientDob", patient.getBirthdate().toString());
+                    response.put("patientDob", new SimpleDateFormat("dd-MM-yyyy").format(patient.getBirthdate()));
                     response.put("patientGender", patient.getGender().equals("M") ? "Male" : "Female");
                     if( patient.getAttribute("Telephone Number") != null){
                         response.put("phoneNumber", patient.getAttribute("Telephone Number").getValue());
