@@ -228,6 +228,7 @@ function mpiImportingDialog(data,sourceButton) {
     document.getElementById("patientGender").textContent=data['patientGender'];
     document.getElementById("phoneNumber").textContent=data['phoneNumber'];
     document.getElementById("mothersName").textContent=data['mothersName'];
+    document.getElementById("sourceLocation").textContent=data['sourceLocation'] ? data['sourceLocation'] : 'Local' ;
     document.getElementById("personAddress").textContent=data['personAddress'];
     document.getElementById("patientIdentifiers").textContent=data['patientIdentifiers'];
     var emrDialog = emr.setupConfirmationDialog({
@@ -286,7 +287,18 @@ function mpiSearchImport(data) {
                 });
                 emrDialog.show();
             }else{
-                alert("No Patient with the given Biometric ID exists in the MPI");
+                var ocrDialog = emr.setupConfirmationDialog({
+                    selector: '#patient-biometric-search-notfound-dialog',
+                    actions: {
+                        confirm: function () {
+                            ocrDialog.close();
+                        },
+                        cancel: function () {
+                            ocrDialog.close();
+                        }
+                    }
+                });
+                ocrDialog.show();
                 toggleFingerprintButtonDisplay(importButton);
             }
         })
