@@ -202,14 +202,14 @@ function searchPatient(sourceButton) {
     var biometricXml = document.getElementById('biometricXml').value;
     jq.getJSON('/' + OPENMRS_CONTEXT_PATH + '/registrationapp/search/M2SysSearch/search.action', {biometricXml: biometricXml})
         .success(function (data) {
+            console.log(data);
             if (data['success'] === true) {
                 if (data['status'] === 'ALREADY_REGISTERED' && data['patientUuid']) {
-                    m2SysShowAlreadyExistingFingerprintsDialog(data);
+                    m2SysShowAlreadyExistingFingerprintsDialog(data,sourceButton);
                 } else {
                     m2SysSuccess();
                     m2SysSetSubjectIdInput(data['localBiometricSubjectId'], data['nationalBiometricSubjectId'])
-                    toggleFingerprintButtonDisplay(jq('#captureButton'));
-                    // toggleFingerprintButtonDisplay(sourceButton);
+                    toggleFingerprintButtonDisplay(sourceButton);
                 }
             } else {
                 m2SysErrorMessage(data['message']);
@@ -246,8 +246,7 @@ function mpiImportingDialog(data,sourceButton) {
     emrDialog.show();
 }
 
-function mpiSearchImport(data) {
-    var importButton = jq('#mpiImportButton');
+function mpiSearchImport(data,sourceButton) {
     var biometricId = data['nationalBiometricSubjectId'];
     $.getJSON(emr.fragmentActionLink("registrationapp", "registerPatient", "fetchMpiFpMatch", {mpiPersonId: biometricId}))
         .success(function (response) {
@@ -271,16 +270,17 @@ function mpiSearchImport(data) {
                                         redirectToPatient(response.message);
                                     }else{
                                         alert("No Patient with the given Biometric ID exists in the MPI");
-                                        toggleFingerprintButtonDisplay(importButton);
+                                        toggleFingerprintButtonDisplay(sourceButton);
                                     }
                                 })
                                 .error(function (xhr, status, err) {
                                     alert('AJAX error ' + err);
-                                    toggleFingerprintButtonDisplay(importButton);
+                                    toggleFingerprintButtonDisplay(sourceButton);
                                 });
-                            redirectToPatient(response.message);
                         },
                         cancel: function () {
+                            toggleFingerprintButtonDisplay(sourceButton);
+                            // toggleFingerprintButtonDisplay(jq('#captureButton'));
                             emrDialog.close();
                         }
                     }
@@ -292,20 +292,24 @@ function mpiSearchImport(data) {
                     actions: {
                         confirm: function () {
                             ocrDialog.close();
+                            toggleFingerprintButtonDisplay(sourceButton);
                         },
                         cancel: function () {
                             ocrDialog.close();
+                            toggleFingerprintButtonDisplay(sourceButton);
+
                         }
                     }
                 });
                 ocrDialog.show();
-                toggleFingerprintButtonDisplay(importButton);
             }
         })
         .error(function (xhr, status, err) {
-            alert('Fingerprint matched but encountered and error while fetching patient details from the MPI');
-            console.log(err.mesage);
-            toggleFingerprintButtonDisplay(importButton);
+            alert('Fingerprint matched but encountered an error while fetching patient details from the MPI');
+            console.log(xhr);
+            console.log(status);
+            console.log(err);
+            toggleFingerprintButtonDisplay(sourceButton);
         });
 }
 
@@ -317,9 +321,8 @@ function searchPatientByBiometricXml(biometricXml,sourceButton) {
                     mpiImportingDialog(data,sourceButton);
                 } else {
                     //Fetch patient from the Client Registry
-                    toggleFingerprintButtonDisplay(sourceButton);
                     if(data['nationalBiometricSubjectId'] !== ""){
-                        mpiSearchImport(data);
+                        mpiSearchImport(data,sourceButton);
                     }
                 }
             } else {
