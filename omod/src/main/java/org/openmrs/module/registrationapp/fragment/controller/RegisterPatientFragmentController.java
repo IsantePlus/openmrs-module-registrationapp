@@ -65,8 +65,6 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
-//import org.openmrs.module.m2sysbiometrics.service.RegistrationService;
-import org.openmrs.module.m2sysbiometrics.service.RegistrationService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
@@ -119,7 +117,7 @@ public class RegisterPatientFragmentController {
     }
 
     public FragmentActionResult importMpiPatient(@RequestParam("mpiPersonId") String personId,
-                            @SpringBean("registrationCoreService") RegistrationCoreService registrationService) {
+                                                 @SpringBean("registrationCoreService") RegistrationCoreService registrationService) {
         String patientUuid = registrationService.importMpiPatient(personId, RegistrationCoreConstants.GP_BIOMETRICS_NATIONAL_PERSON_IDENTIFIER_TYPE_UUID);
         return new SuccessResult(patientUuid);
     }
@@ -137,26 +135,26 @@ public class RegisterPatientFragmentController {
     }
 
     public FragmentActionResult submit(UiSessionContext sessionContext, @RequestParam(value="appId") AppDescriptor app,
-                            @SpringBean("registrationCoreService") RegistrationCoreService registrationService,
-                            @ModelAttribute("patient") @BindParams Patient patient,
-                            @ModelAttribute("personName") @BindParams PersonName name,
-                            @ModelAttribute("personAddress") @BindParams PersonAddress address,
-                            @RequestParam(value="birthdateYears", required = false) Integer birthdateYears,
-                            @RequestParam(value="birthdateMonths", required = false) Integer birthdateMonths,
-                            @RequestParam(value="registrationDate", required = false) Date registrationDate,
-                            @RequestParam(value="unknown", required = false) Boolean unknown,
-                            @RequestParam(value="patientIdentifier", required = false) String patientIdentifier,
-                            @RequestParam(value="localBiometricSubjectId", required = false) String localBiometricSubjectId,
-                            @RequestParam(value="nationalBiometricSubjectId", required = false) String nationalBiometricSubjectId,
-							@RequestParam(value="biometricXml", required = false) String biometricXml,
-                            HttpServletRequest request,
-                            @SpringBean("messageSourceService") MessageSourceService messageSourceService,
-                            @SpringBean("encounterService") EncounterService encounterService,
-                            @SpringBean("obsService") ObsService obsService,
-                            @SpringBean("conceptService") ConceptService conceptService,
-                            @SpringBean("patientService") PatientService patientService,
-                            @SpringBean("emrApiProperties") EmrApiProperties emrApiProperties,
-                            @SpringBean("patientValidator") PatientValidator patientValidator, UiUtils ui) throws Exception {
+                                       @SpringBean("registrationCoreService") RegistrationCoreService registrationService,
+                                       @ModelAttribute("patient") @BindParams Patient patient,
+                                       @ModelAttribute("personName") @BindParams PersonName name,
+                                       @ModelAttribute("personAddress") @BindParams PersonAddress address,
+                                       @RequestParam(value="birthdateYears", required = false) Integer birthdateYears,
+                                       @RequestParam(value="birthdateMonths", required = false) Integer birthdateMonths,
+                                       @RequestParam(value="registrationDate", required = false) Date registrationDate,
+                                       @RequestParam(value="unknown", required = false) Boolean unknown,
+                                       @RequestParam(value="patientIdentifier", required = false) String patientIdentifier,
+                                       @RequestParam(value="localBiometricSubjectId", required = false) String localBiometricSubjectId,
+                                       @RequestParam(value="nationalBiometricSubjectId", required = false) String nationalBiometricSubjectId,
+                                       @RequestParam(value="biometricXml", required = false) String biometricXml,
+                                       HttpServletRequest request,
+                                       @SpringBean("messageSourceService") MessageSourceService messageSourceService,
+                                       @SpringBean("encounterService") EncounterService encounterService,
+                                       @SpringBean("obsService") ObsService obsService,
+                                       @SpringBean("conceptService") ConceptService conceptService,
+                                       @SpringBean("patientService") PatientService patientService,
+                                       @SpringBean("emrApiProperties") EmrApiProperties emrApiProperties,
+                                       @SpringBean("patientValidator") PatientValidator patientValidator, UiUtils ui) throws Exception {
 
 
         NavigableFormStructure formStructure = RegisterPatientFormBuilder.buildFormStructure(app);
@@ -205,17 +203,17 @@ public class RegisterPatientFragmentController {
         // Add any biometric data that was submitted
         Map<Field, BiometricSubject> fingerprintData = RegisterPatientFormBuilder.extractBiometricDataFields(formStructure, request.getParameterMap());
         BiometricSubject subject1=new BiometricSubject();
-if(StringUtils.isNotBlank(biometricXml)) {
- subject1 = new BiometricSubject();
-UUID uuid = UUID.randomUUID();
-subject1.setSubjectId(uuid.toString());
-subject1.addFingerprint(new Fingerprint("DoubleCapture", "FP1", biometricXml));
-PatientIdentifierType identifierType1=patientService.getPatientIdentifierTypeByUuid("e26ca279-8f57-44a5-9ed8-8cc16e90e559");
-if (identifierType1 == null) {
-    throw new IllegalStateException("Invalid fingerprint configuration test. No patient identifier type with uuid [e26ca279-8f57-44a5-9ed8-8cc16e90e559] found.");
-}
-registrationData.addBiometricData(new BiometricData(subject1,identifierType1));
-}
+        if(StringUtils.isNotBlank(biometricXml)) {
+            subject1 = new BiometricSubject();
+            UUID uuid = UUID.randomUUID();
+            subject1.setSubjectId(uuid.toString());
+            subject1.addFingerprint(new Fingerprint("DoubleCapture", "FP1", biometricXml));
+            PatientIdentifierType identifierType1=patientService.getPatientIdentifierTypeByUuid("e26ca279-8f57-44a5-9ed8-8cc16e90e559");
+            if (identifierType1 == null) {
+                throw new IllegalStateException("Invalid fingerprint configuration test. No patient identifier type with uuid [e26ca279-8f57-44a5-9ed8-8cc16e90e559] found.");
+            }
+            registrationData.addBiometricData(new BiometricData(subject1,identifierType1));
+        }
 
         for (Field fingerprintField : fingerprintData.keySet()) {
             BiometricSubject subject = fingerprintData.get(fingerprintField);
@@ -240,7 +238,7 @@ for (Field fingerprintField : fingerprintData.keySet()) {
 }
 */
 
-     if (StringUtils.isNotBlank(localBiometricSubjectId)) {
+        if (StringUtils.isNotBlank(localBiometricSubjectId)) {
             BiometricData biometricData = generateBiometricData(localBiometricSubjectId,
                     RegistrationCoreConstants.GP_BIOMETRICS_PERSON_IDENTIFIER_TYPE_UUID);
             registrationData.getBiometrics().add(biometricData);
