@@ -251,14 +251,14 @@ function mpiSearchImport(data,sourceButton) {
     $.getJSON(emr.fragmentActionLink("registrationapp", "registerPatient", "fetchMpiFpMatch", {mpiPersonId: biometricId}))
         .success(function (response) {
             console.log(response);
-            if(!response.fpMatch === "NOTFOUND"){
-                document.getElementById("patientName").textContent=data['patientName'];
-                document.getElementById("patientDob").textContent=data['patientDob'];
-                document.getElementById("patientGender").textContent=data['patientGender'];
-                document.getElementById("phoneNumber").textContent=data['phoneNumber'];
-                document.getElementById("mothersName").textContent=data['mothersName'];
-                document.getElementById("personAddress").textContent=data['personAddress'];
-                document.getElementById("patientIdentifiers").textContent=data['patientIdentifiers'];
+            if(response.fpMatch === "FOUND"){
+                document.getElementById("patientName").textContent=response.patientName;
+                document.getElementById("patientDob").textContent=response.patientDob;
+                document.getElementById("patientGender").textContent=response.patientGender;
+                document.getElementById("phoneNumber").textContent=response.phoneNumber;
+                document.getElementById("mothersName").textContent=response.mothersName;
+                document.getElementById("personAddress").textContent=response.personAddress;
+                document.getElementById("patientIdentifiers").textContent=response.patientIdentifiers;
                 var emrDialog = emr.setupConfirmationDialog({
                     selector: '#patient-biometric-search-dialog',
                     actions: {
@@ -276,7 +276,7 @@ function mpiSearchImport(data,sourceButton) {
                                 .error(function (xhr, status, err) {
                                     alert('AJAX error ' + err);
                                     toggleFingerprintButtonDisplay(sourceButton);
-                                });
+Z                                });
                         },
                         cancel: function () {
                             toggleFingerprintButtonDisplay(sourceButton);
