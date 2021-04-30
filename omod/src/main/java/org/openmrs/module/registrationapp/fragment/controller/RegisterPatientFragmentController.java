@@ -6,19 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ArrayNode;
 import org.joda.time.DateTimeComparator;
-import org.openmrs.Concept;
-import org.openmrs.Encounter;
-import org.openmrs.EncounterRole;
-import org.openmrs.EncounterType;
-import org.openmrs.Obs;
-import org.openmrs.Patient;
-import org.openmrs.PatientIdentifierType;
-import org.openmrs.Person;
-import org.openmrs.PersonAddress;
-import org.openmrs.PersonAttribute;
-import org.openmrs.PersonName;
-import org.openmrs.Relationship;
-import org.openmrs.RelationshipType;
+import org.openmrs.*;
 import org.openmrs.api.APIException;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.DuplicateIdentifierException;
@@ -68,6 +56,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
@@ -123,10 +112,36 @@ public class RegisterPatientFragmentController {
     }
 
     public SimpleObject fetchMpiFpMatch(@RequestParam("mpiPersonId") String personId, @SpringBean("registrationCoreService") RegistrationCoreService registrationService) {
-        PatientAndMatchQuality patientFetch = registrationService.fetchMpiFpMatch(personId, "registrationcore.biometrics.nationalPersonIdentifierTypeUuid");
+        PatientAndMatchQuality patientFetch = registrationService.fetchMpiFpMatch(personId, RegistrationCoreConstants.GP_BIOMETRICS_NATIONAL_PERSON_IDENTIFIER_TYPE_UUID);
         SimpleObject response = new SimpleObject();
         if (patientFetch != null) {
-            response.put("fpMatch", patientFetch);
+            response.put("fpMatch", "FOUND");
+            response.put("patientName", patientFetch.getPatient().getPersonName().getFullName());
+            response.put("patientDob", new SimpleDateFormat("dd-MM-yyyy").format(patientFetch.getPatient().getBirthdate()));
+            response.put("patientGender", patientFetch.getPatient().getGender().equals("M") ? "Male" : "Female");
+            if (patientFetch.getPatient().getAttribute("Telephone Number") != null) {
+                response.put("phoneNumber", patientFetch.getPatient().getAttribute("Telephone Number").getValue());
+            }
+            if (patientFetch.getPatient().getAttribute("Health Center") != null) {
+                response.put("sourceLocation", patientFetch.getPatient().getAttribute("Health Center").getValue());
+            }
+            if (patientFetch.getPatient().getAttribute("First Name of Mother") != null) {
+                response.put("mothersName", patientFetch.getPatient().getAttribute("First Name of Mother").getValue());
+            }
+            response.put("personAddress", patientFetch.getPatient().getPersonAddress().getAddress1() + ", " +
+                    patientFetch.getPatient().getPersonAddress().getCityVillage() + ", " +
+                    patientFetch.getPatient().getPersonAddress().getStateProvince() + ", " +
+                    patientFetch.getPatient().getPersonAddress().getCountry());
+            StringBuffer identifierString = new StringBuffer();
+            for (PatientIdentifier pId : patientFetch.getPatient().getIdentifiers()) {
+                if (pId.getIdentifierType().equals(PropertiesUtil.getCodeNationalIdType()) ||
+                        pId.getIdentifierType().equals(PropertiesUtil.getCodePcIdType()) ||
+                        pId.getIdentifierType().equals(PropertiesUtil.getCodeStIdType()) ||
+                        pId.getIdentifierType().equals(PropertiesUtil.getIsantePlusIdType())) {
+                    identifierString.append(pId.getIdentifierType().getName() + ": " + pId.getIdentifier() + ", \n");
+                }
+            }
+            response.put("patientIdentifiers", identifierString);
         } else {
             response.put("fpMatch", "NOTFOUND");
         }

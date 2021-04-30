@@ -142,7 +142,7 @@
             <div><span id="patientIdentifiers"></span></div>
         </div>
         <div class="buttons">
-            <button class="confirm right">${ui.message("registrationapp.biometrics.m2sys.register.alreadyExists.importingQuestion.redirectButton")}</button>
+            <button id = "fpImport" class="confirm right">${ui.message("registrationapp.importAndOpen")}</button>
             <button class="cancel">${ui.message("registrationapp.cancel")}</button>
         </div>
     </div>
