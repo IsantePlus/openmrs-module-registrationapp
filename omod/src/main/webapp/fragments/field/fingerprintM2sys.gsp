@@ -98,4 +98,42 @@
             </div>
         </div>
     </div>
+
+    <div style="display:none" id="patient-fp-search-dialog" class="dialog">
+        <div class="dialog-header">
+            ${ui.message("registrationapp.biometrics.m2sys.register.alreadyExists.searchingQuestion.label")}
+        </div>
+
+        <div class="dialog-content">
+            <p>
+                ${ui.message("registrationapp.biometrics.m2sys.register.alreadyExists.searchingQuestion.description")}
+            </p>
+
+
+            <div class="box">
+                <div>Name:</div>
+                <div><span id="mpatientName"></span></div>
+                <div>Phone:</div>
+                <div><span id="mphoneNumber"></span></div>
+                <div>D.o.b:</div>
+                <div><span id="mpatientDob"></span></div>
+                <div>Source:</div>
+                <div><span id="msourceLocation"></span></div>
+                <div>Gender:</div>
+                <div><span id="mpatientGender"></span></div>
+                <div>Mother:</div>
+                <div><span id="mmothersName"></span></div>
+            </div>
+            <div class="address">
+                <div>Address:</div>
+                <div><span id="mpersonAddress"></span></div>
+                <div>Identifiers:</div>
+                <div><span id="mpatientIdentifiers"></span></div>
+            </div>
+            <div class="buttons">
+                <button id = "fpImport" class="confirm right">${ui.message("registrationapp.importAndOpen")}</button>
+                <button class="cancel">${ui.message("registrationapp.cancel")}</button>
+            </div>
+        </div>
+    </div>
 </div>
