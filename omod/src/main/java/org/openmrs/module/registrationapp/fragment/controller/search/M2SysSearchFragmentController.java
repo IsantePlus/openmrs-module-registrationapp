@@ -101,15 +101,18 @@ public class M2SysSearchFragmentController {
             if (result.getEnrollmentStatus() == EnrollmentStatus.ALREADY_REGISTERED) {
 //                Check and load patient
                 Patient patient = null;
-                if (result.getNationalBiometricSubject() != null && result.getLocalBiometricSubject() != null) {
+                if (StringUtils.isNotBlank(result.getNationalBiometricSubject().getSubjectId()) && StringUtils.isNotBlank(result.getLocalBiometricSubject().getSubjectId())) {
+                    log.info("Matches Found on Both the Local and National FP Servers");
 //                    Search by local FP id first, then national
                     patient = findByFingerprintId(result.getLocalBiometricSubject().getSubjectId(), PropertiesUtil.getLocalFpType());
                     if (patient == null) {
                         patient = findByFingerprintId(result.getNationalBiometricSubject().getSubjectId(), PropertiesUtil.getNationalFpType());
                     }
-                } else if (result.getNationalBiometricSubject() != null) {
+                } else if (StringUtils.isNotBlank(result.getNationalBiometricSubject().getSubjectId())){
+                    log.info("Match Found on National FP Server");
                     patient = findByFingerprintId(result.getNationalBiometricSubject().getSubjectId(), PropertiesUtil.getNationalFpType());
-                } else if (result.getLocalBiometricSubject() != null) {
+                } else if (StringUtils.isNotBlank(result.getLocalBiometricSubject().getSubjectId())) {
+                    log.info("Match Found on Local FP");
                     patient = findByFingerprintId(result.getLocalBiometricSubject().getSubjectId(), PropertiesUtil.getLocalFpType());
                 }
 
@@ -142,7 +145,7 @@ public class M2SysSearchFragmentController {
                     response.put("patientIdentifiers", identifierString);
                     response.put("patientUuid", patient.getUuid());
                 } else {
-                    LOGGER.info("No patient found with a local fingerprint ID : " + result.getLocalBiometricSubject().getSubjectId());
+                    log.info("No patient found with the used  fingerprint IDs ");
                 }
             }
 
