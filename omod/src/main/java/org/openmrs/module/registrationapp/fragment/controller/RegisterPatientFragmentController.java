@@ -217,45 +217,8 @@ public class RegisterPatientFragmentController {
         registrationData.setIdentifier(patientIdentifier);
         registrationData.setIdentifierLocation(sessionContext.getSessionLocation());
 
-        // Add any biometric data that was submitted
-        Map<Field, BiometricSubject> fingerprintData = RegisterPatientFormBuilder.extractBiometricDataFields(formStructure, request.getParameterMap());
-        BiometricSubject subject1=new BiometricSubject();
-if(StringUtils.isNotBlank(biometricXml)) {
- subject1 = new BiometricSubject();
-UUID uuid = UUID.randomUUID();
-subject1.setSubjectId(uuid.toString());
-subject1.addFingerprint(new Fingerprint("DoubleCapture", "FP1", biometricXml));
-PatientIdentifierType identifierType1=patientService.getPatientIdentifierTypeByUuid("e26ca279-8f57-44a5-9ed8-8cc16e90e559");
-if (identifierType1 == null) {
-    throw new IllegalStateException("Invalid fingerprint configuration test. No patient identifier type with uuid [e26ca279-8f57-44a5-9ed8-8cc16e90e559] found.");
-}
-registrationData.addBiometricData(new BiometricData(subject1,identifierType1));
-}
 
-        for (Field fingerprintField : fingerprintData.keySet()) {
-            BiometricSubject subject = fingerprintData.get(fingerprintField);
-            PatientIdentifierType identifierType = patientService.getPatientIdentifierTypeByUuid(fingerprintField.getUuid());
-            if (identifierType == null) {
-                throw new IllegalStateException("Invalid fingerprint configuration. No patient identifier type with uuid [" + fingerprintField.getUuid() + "] found.");
-            }
-            registrationData.addBiometricData(new BiometricData(subject, identifierType));
-
-        }
-/*
-  log.error();
-for (Field fingerprintField : fingerprintData.keySet()) {
-    //BiometricSubject subject = fingerprintData.get(fingerprintField);
-    BiometricSubject subject1 = new BiometricSubject();
-    subject1.addFingerprint(new Fingerprint("DoubleCapture", "FP1", biometricXml));
-    PatientIdentifierType identifierType = patientService.getPatientIdentifierTypeByUuid(fingerprintField.getUuid());
-    if (identifierType == null) {
-        throw new IllegalStateException("Invalid fingerprint configuration. No patient identifier type with uuid [" + fingerprintField.getUuid() + "] found.");
-    }
-    registrationData.addBiometricData(new BiometricData(subject1, identifierType));
-}
-*/
-
-     if (StringUtils.isNotBlank(localBiometricSubjectId)) {
+        if (StringUtils.isNotBlank(localBiometricSubjectId)) {
             BiometricData biometricData = generateBiometricData(localBiometricSubjectId,
                     RegistrationCoreConstants.GP_BIOMETRICS_PERSON_IDENTIFIER_TYPE_UUID);
             registrationData.getBiometrics().add(biometricData);

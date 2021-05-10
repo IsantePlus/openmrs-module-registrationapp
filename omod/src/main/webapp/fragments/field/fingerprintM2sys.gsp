@@ -47,8 +47,8 @@
     </button>
 
     <p>
-        <input type="text" name="localBiometricSubjectId" style="display: none"/>
-        <input type="text" name="nationalBiometricSubjectId" style="display: none"/>
+        <input type="hidden" id="localBiometricSubjectId" name="localBiometricSubjectId" />
+        <input type="hidden" id="nationalBiometricSubjectId" name="nationalBiometricSubjectId" />
         <input type="hidden" id="biometricXml" name="biometricXml"/>
         <input type="hidden" name="successMessage" id="successMessage"
                value="${ui.message("registrationapp.biometrics.m2sys.register.success")}"/>

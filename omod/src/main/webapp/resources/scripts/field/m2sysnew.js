@@ -198,6 +198,8 @@ function searchPatient(sourceButton) {
     jq.getJSON('/' + OPENMRS_CONTEXT_PATH + '/registrationapp/search/M2SysSearch/search.action', {biometricXml: biometricXml})
         .success(function (data) {
             console.log(data);
+            document.getElementById('nationalBiometricSubjectId').value = data['nationalBiometricSubjectId'];
+            document.getElementById('localBiometricSubjectId').value = data['localBiometricSubjectId'];
             if (data['success'] === true) {
                 if (data['status'] === 'ALREADY_REGISTERED' && data['patientUuid']) {
                     m2SysShowAlreadyExistingFingerprintsDialog(data,sourceButton);
@@ -276,7 +278,7 @@ function mpiSearchImport(data,sourceButton) {
                                 .error(function (xhr, status, err) {
                                     alert('AJAX error ' + err);
                                     toggleFingerprintButtonDisplay(sourceButton);
-Z                                });
+                               });
                         },
                         cancel: function () {
                             m2SysSuccess();
@@ -294,13 +296,11 @@ Z                                });
                         confirm: function () {
                             ocrDialog.close()
                             m2SysSuccess();
-                            m2SysSetSubjectIdInput(data['localBiometricSubjectId'], data['nationalBiometricSubjectId'])
                             toggleFingerprintButtonDisplay(sourceButton);
                         },
                         cancel: function () {
                             ocrDialog.close();
                             m2SysSuccess();
-                            m2SysSetSubjectIdInput(data['localBiometricSubjectId'], data['nationalBiometricSubjectId'])
                             toggleFingerprintButtonDisplay(sourceButton);
 
                         }
@@ -389,16 +389,15 @@ function searchPatientByBiometricXml(biometricXml,sourceButton) {
         .success(function (data) {
             if (data['success'] === true) {
                 if (data['status'] === 'ALREADY_REGISTERED' && data['patientUuid']) {
-                    mpiImportingDialog(data,sourceButton);
-                }
+                    //Redirect to the matched patient
+                    redirectToPatient(data['patientUuid']);
+                }else if(data['status'] === 'ALREADY_REGISTERED' && data['nationalBiometricSubjectId'] !== "") {
                     //Fetch patient from the Client Registry
-                else if(data['status'] === 'ALREADY_REGISTERED' && data['nationalBiometricSubjectId'] !== "") {
-
                         mpiFpSearchImport(data,sourceButton);
-                    }
-
+                }
             } else {
                 console.log(data['message']);
+                toggleFingerprintButtonDisplay(sourceButton);
             }
         })
         .error(function (data) {
