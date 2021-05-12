@@ -136,4 +136,22 @@
             </div>
         </div>
     </div>
+
+    <div style="display:none" id="patient-fp-search-dialog-missing" class="dialog">
+        <div class="dialog-header">
+            ${ui.message("registrationapp.biometrics.m2sys.register.nofpmatch.header")}
+        </div>
+
+        <div class="dialog-content">
+            <p>
+                ${ui.message("registrationapp.biometrics.m2sys.register.nofpmatch.detail")}
+            </p>
+            <br/>
+
+            <div class="buttons">
+                <button id="ocrImportButton" class="confirm right">${ui.message("registrationapp.dismiss")}</button>
+                <button class="cancel" style="visibility: hidden !important;">${ui.message("registrationapp.cancel")}</button>
+            </div>
+        </div>
+    </div>
 </div>

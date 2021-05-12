@@ -291,7 +291,7 @@ function mpiSearchImport(data,sourceButton) {
                 emrDialog.show();
             }else{
                 var ocrDialog = emr.setupConfirmationDialog({
-                    selector: '#patient-biometric-search-notfound-dialog',
+                    selector: '#patient-fp-search-dialog-missing',
                     actions: {
                         confirm: function () {
                             ocrDialog.close()
