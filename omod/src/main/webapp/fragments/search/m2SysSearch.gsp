@@ -28,7 +28,7 @@
     jq(function () {
         var searchButton = jq('#fingerprint_search_button');
         searchButton.click(function () {
-            biometricSearch('${deviceName}', '${ templateFormat }', '${ engineName }','${ useTemplate }',searchButton);
+            biometricSearch('${deviceName}', '${ templateFormat }', '${ engineName }','${ useTemplate }',searchButton,'${ apiPath }');
         });
     });
 
