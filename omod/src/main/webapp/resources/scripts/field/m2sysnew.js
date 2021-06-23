@@ -19,8 +19,11 @@ function capture(deviceName, templateFormat, engineName, useTemplate,sourceButto
     }
 }
 
-function biometricSearch(deviceName, templateFormat, engineName, useTemplate,sourceButton) {
-    var apiPath = 'http://localhost:15896/api/CloudScanr/FPCapture';
+function biometricSearch(deviceName, templateFormat, engineName, useTemplate,sourceButton,apiPath) {
+    // var apiPath = 'http://localhost:15896/api/CloudScanr/FPCapture';
+    console.log(apiPath);
+    console.log(deviceName);
+    console.log(templateFormat);
     toggleFingerprintButtonDisplay(sourceButton);
     if (useTemplate === "yes") {
         jq.getJSON('/' + OPENMRS_CONTEXT_PATH + '/registrationapp/field/fingerprintM2sys/loadTemplateTemplate.action')
@@ -384,6 +387,23 @@ function mpiFpSearchImport(data,sourceButton) {
         });
 }
 
+function mpiFpSearchMissingMatchDialog(sourceButton) {
+    var ocrDialog = emr.setupConfirmationDialog({
+        selector: '#patient-biometric-search-notfound-dialog',
+        actions: {
+            confirm: function () {
+                ocrDialog.close()
+                toggleFingerprintButtonDisplay(sourceButton);
+            },
+            cancel: function () {
+                ocrDialog.close();
+                toggleFingerprintButtonDisplay(sourceButton);
+            }
+        }
+    });
+    ocrDialog.show();
+}
+
 function searchPatientByBiometricXml(biometricXml,sourceButton) {
     jq.getJSON('/' + OPENMRS_CONTEXT_PATH + '/registrationapp/search/M2SysSearch/search.action', {biometricXml: biometricXml})
         .success(function (data) {
@@ -394,6 +414,9 @@ function searchPatientByBiometricXml(biometricXml,sourceButton) {
                 }else if(data['status'] === 'ALREADY_REGISTERED' && data['nationalBiometricSubjectId'] !== "") {
                     //Fetch patient from the Client Registry
                         mpiFpSearchImport(data,sourceButton);
+                }else{
+                //    No local or OpenCR matches - notify user
+                    mpiFpSearchMissingMatchDialog(sourceButton);
                 }
             } else {
                 console.log(data['message']);
