@@ -210,7 +210,8 @@ function searchPatient(sourceButton) {
                     mpiSearchImport(data,sourceButton);
                 } else {
                     m2SysSuccess();
-                    m2SysSetSubjectIdInput(data['localBiometricSubjectId'], data['nationalBiometricSubjectId'])
+                    //Disable the trigger here  - to not allow the search to proceed
+                    // m2SysSetSubjectIdInput(data['localBiometricSubjectId'], data['nationalBiometricSubjectId']);
                     toggleFingerprintButtonDisplay(sourceButton);
                 }
             } else {
